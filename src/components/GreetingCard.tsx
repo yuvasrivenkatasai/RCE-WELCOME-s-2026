@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Download, Link, QrCode, RefreshCw } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import html2canvas from 'html2canvas';
-import { launchConfetti } from './Fireworks';
+import { launchConfetti, launchSchoolPride } from './Fireworks';
+import Fireworks from './Fireworks';
 import rceLogo from '@/assets/rce-logo.avif';
 
 export interface GreetingData {
@@ -25,9 +26,20 @@ const GreetingCard = ({ greeting, onNewGreeting }: GreetingCardProps) => {
   const { t } = useLanguage();
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Launch confetti when greeting card appears
+  // Launch fireworks and confetti when greeting card appears
   useEffect(() => {
+    // Initial confetti burst
     launchConfetti();
+    
+    // School pride effect after a short delay
+    setTimeout(() => {
+      launchSchoolPride();
+    }, 500);
+    
+    // Another confetti burst
+    setTimeout(() => {
+      launchConfetti();
+    }, 2000);
   }, []);
 
   const handleDownload = async () => {
@@ -76,9 +88,12 @@ const GreetingCard = ({ greeting, onNewGreeting }: GreetingCardProps) => {
 
   return (
     <section className="py-20 px-4 relative">
+      {/* Fireworks component for continuous effect */}
+      <Fireworks autoPlay={true} />
+      
       {/* Floating celebration particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {Array.from({ length: 30 }).map((_, i) => (
+        {Array.from({ length: 40 }).map((_, i) => (
           <div
             key={i}
             className="absolute animate-celebration-float"
@@ -86,13 +101,35 @@ const GreetingCard = ({ greeting, onNewGreeting }: GreetingCardProps) => {
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${4 + Math.random() * 4}s`,
+              animationDuration: `${3 + Math.random() * 5}s`,
             }}
           >
             <div 
-              className="w-2 h-2 rounded-full opacity-60"
+              className={`rounded-full opacity-70 ${i % 3 === 0 ? 'w-3 h-3 animate-sparkle-burst' : 'w-2 h-2'}`}
               style={{
-                backgroundColor: ['hsl(var(--primary))', 'hsl(var(--gold-light))', 'hsl(var(--violet))', 'hsl(var(--accent))'][Math.floor(Math.random() * 4)],
+                backgroundColor: ['hsl(var(--primary))', 'hsl(var(--gold-light))', 'hsl(var(--violet))', 'hsl(var(--accent))', '#FF6B6B', '#4ECDC4'][Math.floor(Math.random() * 6)],
+                animationDelay: `${Math.random() * 2}s`,
+              }}
+            />
+          </div>
+        ))}
+        
+        {/* Firecracker trails */}
+        {Array.from({ length: 15 }).map((_, i) => (
+          <div
+            key={`trail-${i}`}
+            className="absolute animate-firework-trail"
+            style={{
+              left: `${Math.random() * 100}%`,
+              bottom: '0',
+              animationDelay: `${Math.random() * 4}s`,
+              animationDuration: `${2 + Math.random() * 2}s`,
+            }}
+          >
+            <div 
+              className="w-1 h-8 rounded-full opacity-80"
+              style={{
+                background: `linear-gradient(to top, transparent, ${['hsl(var(--primary))', 'hsl(var(--gold-light))', '#FF6B6B', '#FFD93D'][Math.floor(Math.random() * 4)]})`,
               }}
             />
           </div>

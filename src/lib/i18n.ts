@@ -83,6 +83,11 @@ export const translations = {
       EEE: 'EEE - Electrical & Electronics Engineering',
       CIVIL: 'CIVIL - Civil Engineering',
       MECH: 'MECH - Mechanical Engineering',
+      ADS: 'ADS - Artificial Intelligence & Data Science',
+      CS: 'CS - Cyber Security',
+      IOT: 'IOT - Internet of Things',
+      BBA: 'BBA - Bachelor of Business Administration',
+      MBA: 'MBA - Master of Business Administration',
     },
     years: {
       '1': '1st Year',
@@ -173,6 +178,11 @@ export const translations = {
       EEE: 'EEE - ఎలక్ట్రికల్ & ఎలక్ట్రానిక్స్ ఇంజనీరింగ్',
       CIVIL: 'CIVIL - సివిల్ ఇంజనీరింగ్',
       MECH: 'MECH - మెకానికల్ ఇంజనీరింగ్',
+      ADS: 'ADS - ఆర్టిఫిషియల్ ఇంటెలిజెన్స్ & డేటా సైన్స్',
+      CS: 'CS - సైబర్ సెక్యూరిటీ',
+      IOT: 'IOT - ఇంటర్నెట్ ఆఫ్ థింగ్స్',
+      BBA: 'BBA - బ్యాచిలర్ ఆఫ్ బిజినెస్ అడ్మినిస్ట్రేషన్',
+      MBA: 'MBA - మాస్టర్ ఆఫ్ బిజినెస్ అడ్మినిస్ట్రేషన్',
     },
     years: {
       '1': '1వ సంవత్సరం',
