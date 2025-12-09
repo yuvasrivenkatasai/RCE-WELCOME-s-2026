@@ -29,7 +29,7 @@ const GreetingForm = ({ onSubmit, isLoading }: GreetingFormProps) => {
     language: language,
   });
 
-  const branches = ['AIML', 'CSE', 'ECE', 'EEE', 'CIVIL', 'MECH'];
+  const branches = ['AIML', 'CSE', 'ECE', 'EEE', 'CIVIL', 'MECH', 'ADS', 'CS', 'IOT', 'BBA', 'MBA'];
   const years = ['1', '2', '3', '4'];
 
   const handleSubmit = (e: React.FormEvent) => {
