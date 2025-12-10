@@ -97,6 +97,12 @@ const IndexContent = () => {
     }, 100);
   };
 
+  const handleBackHome = () => {
+    setGreeting(null);
+    setShowForm(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen relative">
       <StarBackground />
@@ -105,7 +111,7 @@ const IndexContent = () => {
       <main className="relative z-10">
         {greeting ? (
           <div className="pt-24">
-            <GreetingCard greeting={greeting} onNewGreeting={handleNewGreeting} />
+            <GreetingCard greeting={greeting} onNewGreeting={handleNewGreeting} onBackHome={handleBackHome} />
           </div>
         ) : (
           <>

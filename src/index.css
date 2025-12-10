@@ -246,3 +246,12 @@
 .animate-firework-trail {
   animation: firework-trail 2s ease-out forwards;
 }
+
+/* Hide Lovable badge */
+#lovable-badge,
+[data-lovable-badge],
+a[href*="lovable.dev"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}

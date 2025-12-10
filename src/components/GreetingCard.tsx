@@ -1,12 +1,13 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
-import { Download, Link, QrCode, RefreshCw } from 'lucide-react';
+import { Download, Link, QrCode, RefreshCw, Home, X } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import html2canvas from 'html2canvas';
 import { launchConfetti, launchSchoolPride } from './Fireworks';
 import Fireworks from './Fireworks';
 import rceLogo from '@/assets/rce-logo.avif';
+import { QRCodeSVG } from 'qrcode.react';
 
 export interface GreetingData {
   name: string;
@@ -20,11 +21,16 @@ export interface GreetingData {
 interface GreetingCardProps {
   greeting: GreetingData;
   onNewGreeting: () => void;
+  onBackHome: () => void;
 }
 
-const GreetingCard = ({ greeting, onNewGreeting }: GreetingCardProps) => {
+const GreetingCard = ({ greeting, onNewGreeting, onBackHome }: GreetingCardProps) => {
   const { t } = useLanguage();
   const cardRef = useRef<HTMLDivElement>(null);
+  const [showQRModal, setShowQRModal] = useState(false);
+
+  // Generate unique share URL for this greeting
+  const shareUrl = `${window.location.origin}?greeting=${encodeURIComponent(greeting.name)}`;
 
   // Launch fireworks and confetti when greeting card appears
   useEffect(() => {
@@ -71,8 +77,7 @@ const GreetingCard = ({ greeting, onNewGreeting }: GreetingCardProps) => {
   };
 
   const handleCopyLink = () => {
-    const link = `${window.location.origin}/greeting/sample`;
-    navigator.clipboard.writeText(link);
+    navigator.clipboard.writeText(shareUrl);
     toast({
       title: 'Link Copied!',
       description: 'Share link has been copied to clipboard.',
@@ -80,10 +85,7 @@ const GreetingCard = ({ greeting, onNewGreeting }: GreetingCardProps) => {
   };
 
   const handleShowQR = () => {
-    toast({
-      title: 'QR Code',
-      description: 'QR code feature coming soon!',
-    });
+    setShowQRModal(true);
   };
 
   return (
@@ -214,8 +216,17 @@ const GreetingCard = ({ greeting, onNewGreeting }: GreetingCardProps) => {
           </Button>
         </div>
 
-        {/* New Greeting Button */}
-        <div className="text-center mt-8">
+        {/* Back to Home Button */}
+        <div className="flex flex-wrap justify-center gap-4 mt-6">
+          <Button
+            onClick={onBackHome}
+            variant="outline"
+            className="border-primary/30 bg-primary/10 hover:bg-primary/20 text-primary"
+          >
+            <Home className="w-4 h-4 mr-2" />
+            Back to Home
+          </Button>
+          
           <Button
             onClick={onNewGreeting}
             variant="ghost"
@@ -226,6 +237,57 @@ const GreetingCard = ({ greeting, onNewGreeting }: GreetingCardProps) => {
           </Button>
         </div>
       </div>
+
+      {/* QR Code Modal */}
+      {showQRModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="glass-card-strong p-8 max-w-sm w-full mx-4 relative">
+            <button
+              onClick={() => setShowQRModal(false)}
+              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <div className="text-center">
+              <h3 className="text-xl font-display font-bold gradient-text mb-4">
+                Scan to Share
+              </h3>
+              
+              <div className="bg-white p-4 rounded-2xl inline-block mb-4">
+                <QRCodeSVG 
+                  value={shareUrl}
+                  size={200}
+                  level="H"
+                  includeMargin={true}
+                  imageSettings={{
+                    src: rceLogo,
+                    x: undefined,
+                    y: undefined,
+                    height: 40,
+                    width: 40,
+                    excavate: true,
+                  }}
+                />
+              </div>
+              
+              <p className="text-sm text-muted-foreground mb-4">
+                Scan this QR code to view {greeting.name}'s greeting
+              </p>
+              
+              <Button
+                onClick={handleCopyLink}
+                variant="outline"
+                size="sm"
+                className="border-white/20 bg-white/5 hover:bg-white/10"
+              >
+                <Link className="w-4 h-4 mr-2" />
+                Copy Link
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
