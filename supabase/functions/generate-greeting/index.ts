@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -99,7 +100,7 @@ serve(async (req) => {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
-        temperature: 0.8, // Higher temperature for more varied responses
+        temperature: 0.8,
       }),
     });
 
@@ -135,7 +136,6 @@ serve(async (req) => {
     // Parse the JSON response from AI
     let greeting;
     try {
-      // Extract JSON from the response (in case there's extra text)
       const jsonMatch = content.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         greeting = JSON.parse(jsonMatch[0]);
@@ -144,7 +144,6 @@ serve(async (req) => {
       }
     } catch (parseError) {
       console.error('Failed to parse AI response:', parseError);
-      // Fallback greeting if parsing fails
       greeting = {
         greetingTitle: language === 'EN' 
           ? `Happy New Year 2026, ${name}! 🎉`
@@ -159,6 +158,33 @@ serve(async (req) => {
     }
 
     console.log('Greeting generated successfully for:', name);
+
+    // Save greeting to database
+    try {
+      const supabaseUrl = Deno.env.get('SUPABASE_URL');
+      const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+      
+      if (supabaseUrl && supabaseKey) {
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        
+        await supabase.from('greetings').insert({
+          name,
+          branch,
+          year: `${yearText} Year`,
+          enrollment_number: rollNumber || null,
+          goal: goal || null,
+          greeting_title: greeting.greetingTitle,
+          greeting_body: greeting.greetingBody,
+          motivational_quote: greeting.motivationalQuote,
+          language,
+        });
+        
+        console.log('Greeting saved to database');
+      }
+    } catch (dbError) {
+      console.error('Failed to save greeting to database:', dbError);
+      // Don't fail the request if DB save fails
+    }
 
     return new Response(
       JSON.stringify({
