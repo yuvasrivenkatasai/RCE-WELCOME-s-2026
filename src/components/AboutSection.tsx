@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { Heart, Code, Sparkles } from 'lucide-react';
+import { Code, Sparkles, Instagram, Twitter, Linkedin, Youtube } from 'lucide-react';
 
 const AboutSection = () => {
   const { t } = useLanguage();
@@ -27,9 +27,44 @@ const AboutSection = () => {
             <h3 className="text-xl font-display font-semibold text-foreground mb-1">
               {t.about.creatorName}
             </h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground mb-4">
               {t.about.creatorRole}
             </p>
+            
+            <div className="flex items-center justify-center gap-4">
+              <a 
+                href="https://www.instagram.com/always._.sai._/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-pink-500 transition-colors duration-300"
+              >
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a 
+                href="https://x.com/Yuva_Mukkala" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors duration-300"
+              >
+                <Twitter className="w-5 h-5" />
+              </a>
+              <a 
+                href="https://www.linkedin.com/in/yuva-sri-venkata-sai-mukkala/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-blue-500 transition-colors duration-300"
+              >
+                <Linkedin className="w-5 h-5" />
+              </a>
+              <a 
+                href="https://youtube.com/@yuvasrivenkatasai?si=dxMZD9rCpK_O4D6U" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-red-500 transition-colors duration-300"
+              >
+                <Youtube className="w-5 h-5" />
+              </a>
+            </div>
           </div>
         </div>
       </div>
