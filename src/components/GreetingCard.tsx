@@ -53,9 +53,13 @@ const GreetingCard = ({ greeting, onNewGreeting, onBackHome }: GreetingCardProps
 
     try {
       const canvas = await html2canvas(cardRef.current, {
-        backgroundColor: null,
+        backgroundColor: '#0a0a1a',
         scale: 2,
         useCORS: true,
+        scrollX: 0,
+        scrollY: -window.scrollY,
+        windowWidth: cardRef.current.scrollWidth,
+        windowHeight: cardRef.current.scrollHeight,
       });
       
       const link = document.createElement('a');
@@ -144,11 +148,12 @@ const GreetingCard = ({ greeting, onNewGreeting, onBackHome }: GreetingCardProps
         {/* Card */}
         <div
           ref={cardRef}
-          className="glass-card-strong p-8 sm:p-12 relative overflow-hidden"
+          className="glass-card-strong p-8 sm:p-12 relative overflow-visible"
+          style={{ background: 'linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(15, 15, 35, 0.98) 100%)', borderRadius: '1.5rem' }}
         >
-          {/* Background decorations */}
-          <div className="absolute top-0 right-0 w-40 h-40 bg-primary/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-32 h-32 bg-violet/20 rounded-full blur-3xl" />
+          {/* Background decorations - contained within card bounds */}
+          <div className="absolute top-4 right-4 w-32 h-32 bg-primary/30 rounded-full blur-2xl" />
+          <div className="absolute bottom-4 left-4 w-28 h-28 bg-violet/30 rounded-full blur-2xl" />
           
           {/* Header */}
           <div className="relative text-center mb-8">
