@@ -161,20 +161,55 @@ const GreetingCard = ({ greeting, onNewGreeting, onBackHome }: GreetingCardProps
             }}
           >
             {/* Corner decorations */}
-            <div className="absolute top-3 left-3 w-8 h-8 border-l-2 border-t-2 border-gold-light/60 rounded-tl-lg" />
-            <div className="absolute top-3 right-3 w-8 h-8 border-r-2 border-t-2 border-gold-light/60 rounded-tr-lg" />
-            <div className="absolute bottom-3 left-3 w-8 h-8 border-l-2 border-b-2 border-gold-light/60 rounded-bl-lg" />
-            <div className="absolute bottom-3 right-3 w-8 h-8 border-r-2 border-b-2 border-gold-light/60 rounded-br-lg" />
+            <div className="absolute top-3 left-3 w-10 h-10 border-l-2 border-t-2 border-gold-light/60 rounded-tl-lg" />
+            <div className="absolute top-3 right-3 w-10 h-10 border-r-2 border-t-2 border-gold-light/60 rounded-tr-lg" />
+            <div className="absolute bottom-3 left-3 w-10 h-10 border-l-2 border-b-2 border-gold-light/60 rounded-bl-lg" />
+            <div className="absolute bottom-3 right-3 w-10 h-10 border-r-2 border-b-2 border-gold-light/60 rounded-br-lg" />
             
             {/* Corner stars */}
-            <div className="absolute top-4 left-4 text-gold-light text-lg">✦</div>
-            <div className="absolute top-4 right-4 text-gold-light text-lg">✦</div>
-            <div className="absolute bottom-4 left-4 text-gold-light text-lg">✦</div>
-            <div className="absolute bottom-4 right-4 text-gold-light text-lg">✦</div>
+            <div className="absolute top-5 left-5 text-gold-light text-xl">✦</div>
+            <div className="absolute top-5 right-5 text-gold-light text-xl">✦</div>
+            <div className="absolute bottom-5 left-5 text-gold-light text-xl">✦</div>
+            <div className="absolute bottom-5 right-5 text-gold-light text-xl">✦</div>
+            
+            {/* Firework sparkles scattered around */}
+            <div className="absolute top-12 left-12 text-primary/70 text-sm">✨</div>
+            <div className="absolute top-16 right-16 text-violet/70 text-lg">✴</div>
+            <div className="absolute top-24 left-8 text-gold-light/60 text-xs">⭐</div>
+            <div className="absolute bottom-24 right-10 text-cyan/60 text-sm">✨</div>
+            <div className="absolute bottom-16 left-16 text-primary/60 text-lg">✴</div>
+            <div className="absolute bottom-12 right-20 text-gold-light/50 text-xs">⭐</div>
+            <div className="absolute top-1/3 left-6 text-violet/50 text-sm">✦</div>
+            <div className="absolute top-1/2 right-6 text-gold-light/40 text-sm">✦</div>
+            <div className="absolute bottom-1/3 left-10 text-cyan/50 text-xs">✨</div>
+            <div className="absolute top-20 right-8 text-primary/50 text-xs">⭐</div>
+            
+            {/* Firework burst decorations */}
+            <div className="absolute top-8 left-1/4 flex gap-0.5">
+              <div className="w-1 h-1 bg-gold-light/60 rounded-full" />
+              <div className="w-0.5 h-0.5 bg-gold-light/40 rounded-full mt-1" />
+              <div className="w-0.5 h-0.5 bg-gold-light/40 rounded-full" />
+            </div>
+            <div className="absolute top-10 right-1/4 flex gap-0.5">
+              <div className="w-0.5 h-0.5 bg-violet/50 rounded-full" />
+              <div className="w-1 h-1 bg-violet/70 rounded-full" />
+              <div className="w-0.5 h-0.5 bg-violet/40 rounded-full mt-1" />
+            </div>
+            <div className="absolute bottom-10 left-1/3 flex gap-0.5">
+              <div className="w-0.5 h-0.5 bg-primary/50 rounded-full mt-1" />
+              <div className="w-1 h-1 bg-primary/60 rounded-full" />
+              <div className="w-0.5 h-0.5 bg-primary/40 rounded-full" />
+            </div>
+            <div className="absolute bottom-8 right-1/3 flex gap-0.5">
+              <div className="w-0.5 h-0.5 bg-cyan/40 rounded-full" />
+              <div className="w-0.5 h-0.5 bg-cyan/50 rounded-full mt-1" />
+              <div className="w-1 h-1 bg-cyan/60 rounded-full" />
+            </div>
             
             {/* Background glow decorations */}
             <div className="absolute top-8 right-8 w-32 h-32 bg-primary/20 rounded-full blur-2xl" />
             <div className="absolute bottom-8 left-8 w-28 h-28 bg-violet/20 rounded-full blur-2xl" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-gold-light/10 rounded-full blur-3xl" />
             
             {/* Header */}
             <div className="relative text-center mb-8">
