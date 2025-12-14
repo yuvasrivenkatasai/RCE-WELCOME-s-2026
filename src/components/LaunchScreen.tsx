@@ -6,13 +6,14 @@ interface LaunchScreenProps {
 }
 
 const LaunchScreen = ({ onComplete }: LaunchScreenProps) => {
-  const [phase, setPhase] = useState<'intro' | 'countdown' | 'done'>('intro');
+  const [phase, setPhase] = useState<'intro' | 'countdown' | 'rocket' | 'done'>('intro');
   const [countdown, setCountdown] = useState(3);
   const [fadeOut, setFadeOut] = useState(false);
+  const [rocketLaunched, setRocketLaunched] = useState(false);
 
   // Launch celebratory effects during intro
   const launchIntroEffects = useCallback(() => {
-    const duration = 4500;
+    const duration = 2800;
     const animationEnd = Date.now() + duration;
     const colors = ['#FFD700', '#FFA500', '#3498db', '#ffffff', '#e67e22'];
 
@@ -51,14 +52,14 @@ const LaunchScreen = ({ onComplete }: LaunchScreenProps) => {
     // Start intro effects
     const cleanup = launchIntroEffects();
 
-    // Phase 1: Show intro for 5 seconds
+    // Phase 1: Show intro for 3 seconds
     const introTimer = setTimeout(() => {
       setFadeOut(true);
       setTimeout(() => {
         setFadeOut(false);
         setPhase('countdown');
       }, 500);
-    }, 5000);
+    }, 3000);
 
     return () => {
       clearTimeout(introTimer);
@@ -71,17 +72,32 @@ const LaunchScreen = ({ onComplete }: LaunchScreenProps) => {
       if (countdown > 0) {
         const timer = setTimeout(() => {
           setCountdown(prev => prev - 1);
-        }, 1200); // ~4 seconds total for countdown (3 numbers + launch)
+        }, 1000);
         return () => clearTimeout(timer);
       } else {
+        // Show rocket emoji for a moment, then launch
+        const rocketTimer = setTimeout(() => {
+          setPhase('rocket');
+          setRocketLaunched(true);
+        }, 800);
+        return () => clearTimeout(rocketTimer);
+      }
+    }
+  }, [phase, countdown]);
+
+  useEffect(() => {
+    if (phase === 'rocket' && rocketLaunched) {
+      // Rocket animation duration, then complete
+      const completeTimer = setTimeout(() => {
         setFadeOut(true);
         setTimeout(() => {
           setPhase('done');
           onComplete();
-        }, 400);
-      }
+        }, 300);
+      }, 1000);
+      return () => clearTimeout(completeTimer);
     }
-  }, [phase, countdown, onComplete]);
+  }, [phase, rocketLaunched, onComplete]);
 
   if (phase === 'done') return null;
 
@@ -217,7 +233,7 @@ const LaunchScreen = ({ onComplete }: LaunchScreenProps) => {
           <p className="text-2xl md:text-3xl text-white/80 font-light tracking-wider mb-4">
             Launching in
           </p>
-          <div className="relative">
+          <div className="relative flex items-center justify-center gap-2">
             <span 
               key={countdown}
               className="text-7xl md:text-9xl font-bold text-white animate-scale-in"
@@ -225,13 +241,60 @@ const LaunchScreen = ({ onComplete }: LaunchScreenProps) => {
                 textShadow: '0 0 40px rgba(52, 152, 219, 0.8), 0 0 80px rgba(52, 152, 219, 0.4)',
               }}
             >
-              {countdown > 0 ? countdown : '🚀'}
+              {countdown > 0 ? countdown : '1'}
             </span>
+            {countdown === 0 && (
+              <span 
+                className="text-7xl md:text-9xl animate-scale-in"
+                style={{
+                  textShadow: '0 0 30px rgba(255, 165, 0, 0.8)',
+                }}
+              >
+                🚀
+              </span>
+            )}
           </div>
         </div>
       )}
 
-      {/* CSS for shooting star animation */}
+      {phase === 'rocket' && (
+        <div className="fixed inset-0 z-20 pointer-events-none overflow-hidden">
+          {/* Rocket launching diagonally */}
+          <div 
+            className="absolute text-8xl md:text-9xl"
+            style={{
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%) rotate(-45deg)',
+              animation: 'rocket-launch 1s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+            }}
+          >
+            <div className="relative">
+              🚀
+              {/* Motion trail */}
+              <div 
+                className="absolute top-1/2 -left-2 w-32 h-4 -translate-y-1/2 rotate-180"
+                style={{
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(255, 165, 0, 0.6) 30%, rgba(255, 100, 0, 0.8) 60%, rgba(255, 200, 100, 0.9) 100%)',
+                  filter: 'blur(4px)',
+                  animation: 'trail-glow 0.3s ease-in-out infinite alternate',
+                }}
+              />
+              {/* Glow effect */}
+              <div 
+                className="absolute inset-0 rounded-full"
+                style={{
+                  background: 'radial-gradient(circle, rgba(255, 165, 0, 0.4) 0%, transparent 70%)',
+                  filter: 'blur(20px)',
+                  transform: 'scale(2)',
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CSS for animations */}
       <style>{`
         @keyframes shooting-star {
           0% {
@@ -244,6 +307,28 @@ const LaunchScreen = ({ onComplete }: LaunchScreenProps) => {
           100% {
             transform: translateX(200px) translateY(200px);
             opacity: 0;
+          }
+        }
+        
+        @keyframes rocket-launch {
+          0% {
+            transform: translate(-50%, -50%) rotate(-45deg) scale(1);
+            opacity: 1;
+          }
+          100% {
+            transform: translate(150vw, -150vh) rotate(-45deg) scale(0.5);
+            opacity: 0;
+          }
+        }
+        
+        @keyframes trail-glow {
+          0% {
+            opacity: 0.6;
+            width: 8rem;
+          }
+          100% {
+            opacity: 1;
+            width: 12rem;
           }
         }
       `}</style>
