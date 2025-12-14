@@ -74,7 +74,7 @@ export const translations = {
     },
     footer: {
       copyright: '© 2025 Ramachandra College of Engineering – New Year Wishes 2026',
-      madeWith: 'Made with ❤️ using AI and modern web technologies.',
+      madeWith: 'Built with AI-driven intelligence and modern web technologies.',
     },
     branches: {
       AIML: 'AIML - Artificial Intelligence & Machine Learning',
@@ -169,7 +169,7 @@ export const translations = {
     },
     footer: {
       copyright: '© 2025 రామచంద్ర కాలేజ్ ఆఫ్ ఇంజనీరింగ్ – నూతన సంవత్సర శుభాకాంక్షలు 2026',
-      madeWith: 'AI మరియు ఆధునిక వెబ్ టెక్నాలజీలతో ❤️ తో తయారు చేయబడింది.',
+      madeWith: 'AI-ఆధారిత తెలివితేటలు మరియు ఆధునిక వెబ్ టెక్నాలజీలతో నిర్మించబడింది.',
     },
     branches: {
       AIML: 'AIML - ఆర్టిఫిషియల్ ఇంటెలిజెన్స్ & మెషిన్ లెర్నింగ్',
