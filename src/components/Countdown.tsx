@@ -95,10 +95,20 @@ const Countdown = () => {
     
     return (
       <div className="flex flex-col items-center">
-        <div className="glass-card-strong w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center mb-2 pulse-glow relative overflow-hidden">
+        <div 
+          className="glass-card-strong w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center mb-2 relative overflow-hidden"
+          style={{
+            boxShadow: '0 0 20px rgba(255, 215, 0, 0.4), 0 0 40px rgba(255, 215, 0, 0.2), inset 0 0 20px rgba(255, 215, 0, 0.1)',
+            border: '1px solid rgba(255, 215, 0, 0.3)',
+          }}
+        >
           <div 
             key={value}
-            className={`text-3xl sm:text-4xl font-display font-bold gradient-text ${hasChanged ? 'animate-flip-up' : ''}`}
+            className={`text-3xl sm:text-4xl font-display font-bold ${hasChanged ? 'animate-flip-up' : ''}`}
+            style={{
+              color: '#FFD700',
+              textShadow: '0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.5), 0 0 30px rgba(255, 215, 0, 0.3)',
+            }}
           >
             {String(value).padStart(2, '0')}
           </div>
