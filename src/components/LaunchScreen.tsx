@@ -218,9 +218,6 @@ const LaunchScreen = ({ onComplete }: LaunchScreenProps) => {
 
       {phase === 'countdown' && (
         <div className="flex flex-col items-center relative z-10">
-          <p className="text-base md:text-lg text-cyan-300/90 font-medium tracking-wide mb-2 animate-fade-in">
-            A special experience for RCE students is counting down.
-          </p>
           <p className="text-2xl md:text-3xl text-white/80 font-light tracking-wider mb-4">
             Launching in
           </p>

@@ -49,6 +49,9 @@ const Countdown = () => {
   return (
     <div className="py-16 px-4">
       <div className="container mx-auto text-center">
+        <p className="text-sm sm:text-base text-cyan-400/90 font-medium tracking-widest uppercase mb-3 animate-pulse">
+          A special experience for RCE students is counting down.
+        </p>
         <h2 className="text-2xl sm:text-3xl font-display font-semibold mb-8 gradient-text-violet">
           {t.countdown.title}
         </h2>
