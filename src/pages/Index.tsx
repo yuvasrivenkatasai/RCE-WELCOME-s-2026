@@ -10,6 +10,7 @@ import AboutSection from '@/components/AboutSection';
 import Footer from '@/components/Footer';
 import SampleGreetingModal from '@/components/SampleGreetingModal';
 import LaunchScreen from '@/components/LaunchScreen';
+import GreetingsGallery from '@/components/GreetingsGallery';
 import { launchConfetti } from '@/components/Fireworks';
 import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -152,6 +153,7 @@ const IndexContent = () => {
                   <GreetingForm onSubmit={handleFormSubmit} isLoading={isLoading} />
                 )}
                 <AboutSection />
+                <GreetingsGallery onGenerateGreeting={scrollToForm} />
               </>
             )}
           </main>
