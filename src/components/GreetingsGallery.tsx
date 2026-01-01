@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
-import { Download, Sparkles, Loader2 } from 'lucide-react';
+import { Download, Sparkles, Loader2, Eye, X } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import html2canvas from 'html2canvas';
-import rceLogo from '@/assets/rce-logo.avif';
+import GreetingCardDisplay, { GreetingDisplayData } from './GreetingCardDisplay';
 
 interface GreetingRecord {
   id: string;
@@ -21,21 +21,29 @@ interface GreetingsGalleryProps {
   onGenerateGreeting: () => void;
 }
 
-const ITEMS_PER_PAGE = 8;
+const ITEMS_PER_PAGE = 9;
 
-const GalleryCard = ({ greeting }: { greeting: GreetingRecord }) => {
+const GalleryCard = ({ 
+  greeting, 
+  onView 
+}: { 
+  greeting: GreetingRecord;
+  onView: () => void;
+}) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
-  // Get first name only for privacy
-  const displayName = greeting.name.split(' ')[0];
+  const greetingData: GreetingDisplayData = {
+    name: greeting.name,
+    branch: greeting.branch,
+    year: greeting.year,
+    greetingTitle: greeting.greeting_title,
+    greetingBody: greeting.greeting_body,
+    motivationalQuote: greeting.motivational_quote,
+  };
 
-  // Truncate greeting body to 2-3 lines
-  const truncatedBody = greeting.greeting_body.length > 120 
-    ? greeting.greeting_body.substring(0, 120) + '...' 
-    : greeting.greeting_body;
-
-  const handleDownload = async () => {
+  const handleDownload = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!cardRef.current || isDownloading) return;
 
     setIsDownloading(true);
@@ -73,78 +81,47 @@ const GalleryCard = ({ greeting }: { greeting: GreetingRecord }) => {
         RCEE 2026
       </div>
 
-      {/* Card Container */}
-      <div
-        ref={cardRef}
-        className="relative p-[2px] rounded-2xl overflow-hidden transition-all duration-300 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-primary/20"
+      {/* Scaled Card Container */}
+      <div 
+        className="transition-all duration-300 group-hover:scale-[1.02] group-hover:shadow-2xl group-hover:shadow-primary/20 origin-top"
         style={{ 
-          background: 'linear-gradient(135deg, hsl(45, 90%, 55%) 0%, hsl(280, 70%, 50%) 50%, hsl(200, 80%, 50%) 100%)',
+          transform: 'scale(0.55)',
+          transformOrigin: 'top center',
+          marginBottom: '-45%',
         }}
       >
-        {/* Inner Card */}
-        <div
-          className="relative p-5 rounded-2xl min-h-[280px] flex flex-col"
-          style={{ 
-            background: 'linear-gradient(135deg, rgba(26, 26, 46, 0.98) 0%, rgba(15, 15, 35, 0.99) 100%)',
-          }}
-        >
-          {/* Corner decorations */}
-          <div className="absolute top-2 left-2 w-6 h-6 border-l border-t border-gold-light/40 rounded-tl" />
-          <div className="absolute top-2 right-2 w-6 h-6 border-r border-t border-gold-light/40 rounded-tr" />
-          <div className="absolute bottom-2 left-2 w-6 h-6 border-l border-b border-gold-light/40 rounded-bl" />
-          <div className="absolute bottom-2 right-2 w-6 h-6 border-r border-b border-gold-light/40 rounded-br" />
-
-          {/* Background glow */}
-          <div className="absolute top-4 right-4 w-16 h-16 bg-primary/15 rounded-full blur-xl" />
-          <div className="absolute bottom-4 left-4 w-14 h-14 bg-gold-light/10 rounded-full blur-xl" />
-
-          {/* Header */}
-          <div className="text-center mb-3">
-            <h3 className="text-lg font-display font-bold bg-gradient-to-r from-primary via-gold-light to-violet bg-clip-text text-transparent">
-              Happy New Year 2026
-            </h3>
-          </div>
-
-          {/* Student Info */}
-          <div className="text-center mb-3">
-            <p className="text-foreground font-semibold text-base">{displayName}</p>
-            <p className="text-muted-foreground text-xs">
-              {greeting.branch} – {greeting.year} Year
-            </p>
-          </div>
-
-          {/* Greeting Preview */}
-          <div className="flex-1 mb-3">
-            <p className="text-sm text-foreground/80 leading-relaxed text-center line-clamp-3">
-              {truncatedBody}
-            </p>
-          </div>
-
-          {/* Footer */}
-          <div className="text-center pt-2 border-t border-white/10">
-            <div className="flex items-center justify-center gap-2">
-              <img src={rceLogo} alt="RCE" className="w-5 h-5 rounded-full object-contain bg-white/20" />
-              <span className="text-xs text-gold-light/60">Ramachandra College of Engineering</span>
-            </div>
-          </div>
-        </div>
+        <GreetingCardDisplay 
+          ref={cardRef}
+          greeting={greetingData}
+        />
       </div>
 
-      {/* Download Button Overlay */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 rounded-2xl">
-        <Button
-          onClick={handleDownload}
-          disabled={isDownloading}
-          className="bg-gradient-to-r from-primary to-gold-light text-primary-foreground shadow-lg hover:shadow-xl"
-          size="sm"
-        >
-          {isDownloading ? (
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-          ) : (
-            <Download className="w-4 h-4 mr-2" />
-          )}
-          Download
-        </Button>
+      {/* Hover Overlay with Buttons */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50 rounded-2xl" style={{ marginBottom: '-45%' }}>
+        <div className="flex gap-3">
+          <Button
+            onClick={onView}
+            variant="outline"
+            className="bg-white/10 border-white/30 hover:bg-white/20 text-white"
+            size="sm"
+          >
+            <Eye className="w-4 h-4 mr-2" />
+            View
+          </Button>
+          <Button
+            onClick={handleDownload}
+            disabled={isDownloading}
+            className="bg-gradient-to-r from-primary to-gold-light text-primary-foreground shadow-lg"
+            size="sm"
+          >
+            {isDownloading ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Download className="w-4 h-4 mr-2" />
+            )}
+            Download
+          </Button>
+        </div>
       </div>
     </div>
   );
@@ -156,6 +133,9 @@ const GreetingsGallery = ({ onGenerateGreeting }: GreetingsGalleryProps) => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(0);
+  const [selectedGreeting, setSelectedGreeting] = useState<GreetingRecord | null>(null);
+  const modalCardRef = useRef<HTMLDivElement>(null);
+  const [isModalDownloading, setIsModalDownloading] = useState(false);
 
   const fetchGreetings = async (pageNum: number, append: boolean = false) => {
     try {
@@ -177,7 +157,6 @@ const GreetingsGallery = ({ onGenerateGreeting }: GreetingsGalleryProps) => {
           setGreetings(data);
         }
         
-        // Check if there are more items
         if (count !== null) {
           setHasMore((pageNum + 1) * ITEMS_PER_PAGE < count);
         } else {
@@ -211,6 +190,37 @@ const GreetingsGallery = ({ onGenerateGreeting }: GreetingsGalleryProps) => {
     setIsLoadingMore(false);
   };
 
+  const handleModalDownload = async () => {
+    if (!modalCardRef.current || isModalDownloading || !selectedGreeting) return;
+
+    setIsModalDownloading(true);
+    try {
+      const canvas = await html2canvas(modalCardRef.current, {
+        backgroundColor: '#0a0a1a',
+        scale: 2,
+        useCORS: true,
+      });
+      
+      const link = document.createElement('a');
+      link.download = `RCEE_Greeting_2026_${selectedGreeting.name.replace(/\s+/g, '_')}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      
+      toast({
+        title: 'Downloaded!',
+        description: 'Greeting card saved successfully.',
+      });
+    } catch (error) {
+      toast({
+        title: 'Download Failed',
+        description: 'Could not download the card.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsModalDownloading(false);
+    }
+  };
+
   // Empty state
   if (!isLoading && greetings.length === 0) {
     return (
@@ -218,17 +228,17 @@ const GreetingsGallery = ({ onGenerateGreeting }: GreetingsGalleryProps) => {
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-display font-bold gradient-text mb-4">
-              Greetings Created So Far
+              Greeting Gallery
             </h2>
             <p className="text-muted-foreground text-lg">
-              A glimpse of wishes shared by the RCE community
+              Every greeting created so far — a growing memory wall of RCE.
             </p>
           </div>
 
           <div className="glass-card p-12 text-center max-w-md mx-auto">
             <Sparkles className="w-16 h-16 mx-auto mb-6 text-gold-light animate-pulse" />
             <h3 className="text-xl font-display font-bold text-foreground mb-3">
-              Be the first to create a New Year greeting from RCE 🎉
+              No greetings yet — be the first to create one 🎉
             </h3>
             <p className="text-muted-foreground mb-6">
               Start the celebration and inspire others!
@@ -247,72 +257,127 @@ const GreetingsGallery = ({ onGenerateGreeting }: GreetingsGalleryProps) => {
   }
 
   return (
-    <section id="greetings-gallery" className="py-20 px-4 relative">
-      {/* Background decorations */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-72 h-72 bg-violet/5 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gold-light/3 rounded-full blur-3xl" />
-      </div>
-
-      <div className="container mx-auto max-w-7xl relative z-10">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-4">
-            <Sparkles className="w-4 h-4 text-gold-light" />
-            <span className="text-sm text-primary font-medium">Community Celebrations</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-display font-bold gradient-text mb-4">
-            Greetings Created So Far
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            A glimpse of wishes shared by the RCE community
-          </p>
+    <>
+      <section id="greetings-gallery" className="py-20 px-4 relative">
+        {/* Background decorations */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 right-10 w-72 h-72 bg-violet/5 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gold-light/3 rounded-full blur-3xl" />
         </div>
 
-        {/* Loading State */}
-        {isLoading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-10 h-10 text-primary animate-spin" />
-          </div>
-        ) : (
-          <>
-            {/* Gallery Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {greetings.map((greeting, index) => (
-                <div
-                  key={greeting.id}
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <GalleryCard greeting={greeting} />
-                </div>
-              ))}
+        <div className="container mx-auto max-w-7xl relative z-10">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-4">
+              <Sparkles className="w-4 h-4 text-gold-light" />
+              <span className="text-sm text-primary font-medium">Community Celebrations</span>
             </div>
+            <h2 className="text-3xl sm:text-4xl font-display font-bold gradient-text mb-4">
+              Greeting Gallery
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Every greeting created so far — a growing memory wall of RCE.
+            </p>
+          </div>
 
-            {/* Load More Button */}
-            {hasMore && (
-              <div className="text-center mt-12">
-                <Button
-                  onClick={handleLoadMore}
-                  disabled={isLoadingMore}
-                  variant="outline"
-                  className="border-primary/30 bg-primary/10 hover:bg-primary/20 text-primary px-8 py-3"
-                >
-                  {isLoadingMore ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Loading...
-                    </>
-                  ) : (
-                    'Load More Greetings'
-                  )}
-                </Button>
+          {/* Loading State */}
+          {isLoading ? (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="w-10 h-10 text-primary animate-spin" />
+            </div>
+          ) : (
+            <>
+              {/* Gallery Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {greetings.map((greeting, index) => (
+                  <div
+                    key={greeting.id}
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <GalleryCard 
+                      greeting={greeting} 
+                      onView={() => setSelectedGreeting(greeting)}
+                    />
+                  </div>
+                ))}
               </div>
-            )}
-          </>
-        )}
-      </div>
-    </section>
+
+              {/* Load More Button */}
+              {hasMore && (
+                <div className="text-center mt-12">
+                  <Button
+                    onClick={handleLoadMore}
+                    disabled={isLoadingMore}
+                    variant="outline"
+                    className="border-primary/30 bg-primary/10 hover:bg-primary/20 text-primary px-8 py-3"
+                  >
+                    {isLoadingMore ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Loading...
+                      </>
+                    ) : (
+                      'Load More Greetings'
+                    )}
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </section>
+
+      {/* Full-size Modal */}
+      {selectedGreeting && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-auto"
+          onClick={() => setSelectedGreeting(null)}
+        >
+          <div 
+            className="relative max-w-3xl w-full max-h-[90vh] overflow-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close button */}
+            <button
+              onClick={() => setSelectedGreeting(null)}
+              className="absolute -top-2 -right-2 z-50 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Full-size Card */}
+            <GreetingCardDisplay
+              ref={modalCardRef}
+              greeting={{
+                name: selectedGreeting.name,
+                branch: selectedGreeting.branch,
+                year: selectedGreeting.year,
+                greetingTitle: selectedGreeting.greeting_title,
+                greetingBody: selectedGreeting.greeting_body,
+                motivationalQuote: selectedGreeting.motivational_quote,
+              }}
+            />
+
+            {/* Download Button */}
+            <div className="text-center mt-6">
+              <Button
+                onClick={handleModalDownload}
+                disabled={isModalDownloading}
+                className="bg-gradient-to-r from-primary to-gold-light text-primary-foreground shadow-lg hover:shadow-xl"
+              >
+                {isModalDownloading ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Download className="w-4 h-4 mr-2" />
+                )}
+                Download Full Size
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
